@@ -78,7 +78,7 @@ plt.show()
 ```
 
 
-![png](mnist_files/mnist_7_0.png)
+![png](images/mnist_7_0.png)
 
 
 Fortunately we can see that the distribution of target variables is relatively even. If the target variable was heavily imbalanced, we would need to consider oversampling or undersampling techniques, but that is not the case. 
@@ -116,7 +116,7 @@ plt.show()
 ```
 
 
-![png](mnist_files/mnist_12_0.png)
+![png](images/mnist_12_0.png)
 
 
 ### Normalization
@@ -353,7 +353,7 @@ plt.show()
 ```
 
 
-![png](mnist_files/mnist_36_0.png)
+![png](images/mnist_36_0.png)
 
 
 Let's see how well our base model scored (in terms of validation accuracy).
@@ -520,7 +520,7 @@ plt.show()
 ```
 
 
-![png](mnist_files/mnist_50_0.png)
+![png](images/mnist_50_0.png)
 
 
 
@@ -633,7 +633,7 @@ plt.show()
 ```
 
 
-![png](mnist_files/mnist_54_0.png)
+![png](images/mnist_54_0.png)
 
 
 
