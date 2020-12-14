@@ -1,1 +1,3 @@
 theme: jekyll-theme-cayman
+title: [Handwritten Digit Recognition with Convolutional Neural Networks]
+description: [Building a top 12% image recognition classifier for Kaggle's Digit Recognizer competition]
