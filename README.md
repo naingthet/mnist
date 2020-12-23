@@ -1,6 +1,7 @@
 # Handwritten Digit Recognition with Convolutional Neural Networks
 ![png](images/architecture.png)
 [Read this post on my website](https://naingthet.github.io/posts/digit-recognizer/digit-recognizer/)
+
 This project is a walkthrough of my submission to Kaggle's [Digit Recognizer](https://www.kaggle.com/c/digit-recognizer) competition, which ranked in the top 12% of submissions. In this notebook we will build a powerful convolutional neural network (CNN) architecture to recognize and classify images of handwritten digits (0-9). For reference, my final classifier had a test **accuracy of 99.5%** upon submission to Kaggle.
 
 ## Setup
