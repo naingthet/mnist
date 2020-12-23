@@ -1,6 +1,6 @@
 # Handwritten Digit Recognition with Convolutional Neural Networks
 ![png](images/architecture.png)
-This project is a walkthrough of my submission to Kaggle's [Digit Recognizer](https://www.kaggle.com/c/digit-recognizer) competition, which ranked in the top 12% of submissions. In this notebook we will build a powerful convolutional neural network (CNN) architecture to recognize and classify images of handwritten digits (0-9). For reference, my final classifier had a test **accuracy of 99.5%** upon submission to Kaggle. 
+This project is a walkthrough of my submission to Kaggle's [Digit Recognizer](https://www.kaggle.com/c/digit-recognizer) competition, which ranked in the top 12% of submissions. In this notebook we will build a powerful convolutional neural network (CNN) architecture to recognize and classify images of handwritten digits (0-9). For reference, my final classifier had a test **accuracy of 99.5%** upon submission to Kaggle.
 
 ## Setup
 We will start by importing essential libraries and loading our data. As I go through the notebook, I ensure that all imports are included in this first cell.
@@ -10,7 +10,7 @@ We will start by importing essential libraries and loading our data. As I go thr
 # Essential libraries
 import pandas as pd
 import numpy as np
-import matplotlib as mpl 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from scipy import stats
 import seaborn as sns
@@ -18,7 +18,7 @@ import seaborn as sns
 import sys, time, datetime, cv2, os
 from progressbar import ProgressBar
 
-np.random.seed(0) # Set the random seed for reproducibility 
+np.random.seed(0) # Set the random seed for reproducibility
 random_state = 0
 
 from sklearn.model_selection import train_test_split
@@ -68,7 +68,7 @@ print('X_train shape: {}\ny_train shape: {}'.format(X_train.shape, y_train.shape
 
 
 ## Data Cleaning and Preprocessing
-In this next section, we will clean and preprocess our data to prepare it for our CNNs. This is a crucial step, as it will allow us to build an accurate classifier. 
+In this next section, we will clean and preprocess our data to prepare it for our CNNs. This is a crucial step, as it will allow us to build an accurate classifier.
 
 
 ```
@@ -81,7 +81,7 @@ plt.show()
 ![png](images/mnist_7_0.png)
 
 
-Fortunately we can see that the distribution of target variables is relatively even. If the target variable was heavily imbalanced, we would need to consider oversampling or undersampling techniques, but that is not the case. 
+Fortunately we can see that the distribution of target variables is relatively even. If the target variable was heavily imbalanced, we would need to consider oversampling or undersampling techniques, but that is not the case.
 
 
 ```
@@ -97,7 +97,7 @@ print(test.isnull().sum(axis=0).any())
     False
 
 
-Fortunately Kaggle has provided us with a nice and clean dataset that does not contain any null values. 
+Fortunately Kaggle has provided us with a nice and clean dataset that does not contain any null values.
 
 ### Viewing the images
 Each image in our dataset is represented by a row of 784 values. We can reshape these rows into 28x28 images and display them. Let's take a look at a few of the images in the dataset to get a sense for what we're working with.
@@ -142,7 +142,7 @@ test = test/255.0
 ```
 
 ### Reshaping the data
-As mentioned, we should reshape the data into square images, as they are currently represented by rows. 
+As mentioned, we should reshape the data into square images, as they are currently represented by rows.
 
 The images are provided as 1D arrays of 784 values, which we will reshape to 28x28 arrays.
 
@@ -168,7 +168,7 @@ print('X_train shape: {}\nX_test shape: {}'.format(X_train.shape, test.shape))
 
 
 ### Training and validation data
-To evaluate the performance of our CNNs when we eventually build the models, we will want to create a holdout/ validation set. Here, we will separate 20% of the values into a validation set. Additionally, we will stratify the y values so that the training and validation datasets have equal proportions of each of the 10 digits. 
+To evaluate the performance of our CNNs when we eventually build the models, we will want to create a holdout/ validation set. Here, we will separate 20% of the values into a validation set. Additionally, we will stratify the y values so that the training and validation datasets have equal proportions of each of the 10 digits.
 
 
 ```
@@ -258,10 +258,10 @@ y_train[0]
 
 
 
-As a result of our one-hot encoding, each output is represented by a vector of 10 values, with a value of 1 in the position of the output's label. 
+As a result of our one-hot encoding, each output is represented by a vector of 10 values, with a value of 1 in the position of the output's label.
 
 ## Base CNN Model
-We will now train our first CNN models, establishing a paradigm with which we will train additional models and assess model performance. The base model will consist of 3 sets of convolutional and max pooling layers. The first convolutional layer will act as the input layer. Each convolutional layer will have double the filters of the previous convolutional layer. We will build our network this way to allow our CNN to initially detect local features and progressively begin to identify higher level features. 
+We will now train our first CNN models, establishing a paradigm with which we will train additional models and assess model performance. The base model will consist of 3 sets of convolutional and max pooling layers. The first convolutional layer will act as the input layer. Each convolutional layer will have double the filters of the previous convolutional layer. We will build our network this way to allow our CNN to initially detect local features and progressively begin to identify higher level features.
 
 Our convolutions serve to extract features and edges from our images. Following these layers, we will flatten the output and feed it into a fully connected layer. This layer will use the features to learn how to classify the images. Lastly, we will use a dense layer with 10 neurons, which will classify our images into each of the 10 categories, representing the digits.  
 
@@ -275,7 +275,7 @@ base_model = Sequential([
 
                          Conv2D(filters=64, kernel_size=(3,3), padding='same', activation='relu'),
                          MaxPool2D(padding='same'),
-                         
+
                          Conv2D(filters=128, kernel_size=(3,3), padding='same', activation='relu'),
                          MaxPool2D(padding='same'),
 
@@ -367,20 +367,20 @@ print('Best Validation Accuracy: {:.4f}'.format(base_score))
     Best Validation Accuracy: 0.9900
 
 
-Great, we managed to achieve a 99% accuracy with our base model. This is unsurprising as the task at hand is relatively simple. However, it also means that there is limited room for improvement. 
+Great, we managed to achieve a 99% accuracy with our base model. This is unsurprising as the task at hand is relatively simple. However, it also means that there is limited room for improvement.
 
 ## Model Tuning
 Now that we have created and evaluated our base model, we will attempt to strengthen the model's accuracy. To do so, we will edit the architecture as well as make use of data augmentation, which we will walk through below.  
 
 ### Data Augmentation
 
-The first step to improving our model is to use **data augmentation**. Data augmentation is the process of artifically expanding the size of our training dataset, and in the case of image data, involves the creation of new samples that are slightly altered versions of training samples. We will use the `keras` `ImageDataGenerator`, which will not only allow us to augment our data, but also acts as a data generator that will feed our models with data sequentially rather than loading all of the data into RAM. This will give us a larger training dataset and help to improve model accuracy. 
+The first step to improving our model is to use **data augmentation**. Data augmentation is the process of artifically expanding the size of our training dataset, and in the case of image data, involves the creation of new samples that are slightly altered versions of training samples. We will use the `keras` `ImageDataGenerator`, which will not only allow us to augment our data, but also acts as a data generator that will feed our models with data sequentially rather than loading all of the data into RAM. This will give us a larger training dataset and help to improve model accuracy.
 
 
 ```
 datagen = ImageDataGenerator(
-    rotation_range = 10, 
-    zoom_range = 0.1, 
+    rotation_range = 10,
+    zoom_range = 0.1,
     width_shift_range = 0.1,
     height_shift_range = 0.1
 )
@@ -395,7 +395,7 @@ To improve our model, we will make two major changes.
 
 First, rather than using sets of convolutional layers followed by pooling layers, we will use 2 sets of convolutional layers followed by a pooling in each stack. We will have 3 stacks of these layers as before. Conv-Pool and Conv-Conv-Pool architectures have been proven as some of the most powerful ways to build CNNs from scratch.
 
-Second, we will add dropout layers to our model. These layers will randomly drop a portion of the data in each epoch. This prevents overfitting by helping to ensure that our models do not learn noise. 
+Second, we will add dropout layers to our model. These layers will randomly drop a portion of the data in each epoch. This prevents overfitting by helping to ensure that our models do not learn noise.
 
 
 
@@ -414,7 +414,7 @@ model = Sequential([
                          Conv2D(filters=64, kernel_size=(3,3), activation='relu', padding='same'),
                          MaxPool2D(strides=2, padding='same'),
                          Dropout(0.3),
-                         
+
                          Conv2D(filters=128, kernel_size=(3,3), activation='relu', padding='same'),
                          Conv2D(filters=128, kernel_size=(3,3), activation='relu', padding='same'),
                          MaxPool2D(strides=2, padding='same'),
@@ -648,9 +648,9 @@ print('Best Validation Accuracy: {:.4f}'.format(best_score))
 Thanks to the ReduceLROnPlateau callback, we were able to make a slight improvement on our model's validation accuracy!
 
 ## Bayesian Hyperparameter Optimization Using Hyperopt
-We have made improvements to our CNN, but we can take it even further by optimizing our hyperparameters. In this project, we will Bayesian hyperparameter optimization with the `hyperopt` library. 
+We have made improvements to our CNN, but we can take it even further by optimizing our hyperparameters. In this project, we will Bayesian hyperparameter optimization with the `hyperopt` library.
 
-We will not fully explore the theory behind Bayesian optimization, but will provide a high-level overview of the concept. Unlike grid search and random search, which search through parameter spaces without learning anything about where the best values lie, Bayesian optimization builds a probability model of the objective function (in our case, validation accuracy) and uses this model to predict the optimal set of hyperparameters. Evaluating the true objective function is computationally expensive, and by using a probability model of the objective function as a proxy rather than using the objective function itself, Bayesian optimization is often able to converge far faster than traditional hyperparameter search methods. 
+We will not fully explore the theory behind Bayesian optimization, but will provide a high-level overview of the concept. Unlike grid search and random search, which search through parameter spaces without learning anything about where the best values lie, Bayesian optimization builds a probability model of the objective function (in our case, validation accuracy) and uses this model to predict the optimal set of hyperparameters. Evaluating the true objective function is computationally expensive, and by using a probability model of the objective function as a proxy rather than using the objective function itself, Bayesian optimization is often able to converge far faster than traditional hyperparameter search methods.
 
 In the code below, we create the parameter space and use hyperopt to find the optimal set of parameters. After running this optimization, we must decode the hyperopt output, as the output presents parameter indices rather than the actual values.
 
@@ -882,14 +882,10 @@ model.save('model.h5')
 
 
 ```
-model.summary()
-```
-
-
-```
 from keras.utils.vis_utils import plot_model
 plot_model(model, to_file='best_model.png', show_shapes=True, show_layer_names=True)
 ```
+![png](images/best_model.png)
 
 ## Results
 We have managed to achieve a validation accuracy of 99.5%! This is very strong performance, and as of this notebook's creation, landed me in the top 12% of the Digit Recognizer leaderboard.
@@ -925,103 +921,21 @@ output['Label'] = y_pred
 
 
 ```
-output
+print(output)
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>ImageId</th>
-      <th>Label</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>3</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>4</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>5</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>27995</th>
-      <td>27996</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>27996</th>
-      <td>27997</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <th>27997</th>
-      <td>27998</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>27998</th>
-      <td>27999</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>27999</th>
-      <td>28000</td>
-      <td>2</td>
-    </tr>
-  </tbody>
-</table>
-<p>28000 rows × 2 columns</p>
-</div>
+       ImageId  Label
+    0        1      2
+    1        2      0
+    2        3      9
+    3        4      0
+    4        5      3
+    28000 rows × 2 columns
 
 
 
 
 ```
 output.to_csv('mnist_submissions.csv', index=False)
-```
-
-
-```
-
 ```
